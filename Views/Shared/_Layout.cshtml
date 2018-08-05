@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klucznik: @ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @*usunięcie pustego obszaru u góry strony:*@
+    <style>
+        body {
+            padding-top: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-expand-sm navbar-dark navbar-fixed-top bg-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"></button>
+            @Html.ActionLink("Klucznik", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item">@Html.RouteLink("Instrukcje", "About", null, new { @class = "nav-link" })</li>
+                    @if (Request.IsAuthenticated)
+                    {                       
+                        <li class="nav-item">@Html.RouteLink("Twoje mapy", "ShowUser", new { name = User.Identity.GetUserName() }, new { @class = "nav-link" })</li>
+                    }
+                    <li class="nav-item">@Html.RouteLink("Wybór mapy", "BrowseLevelsDefault", null, new { @class = "nav-link" })</li>
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/popper")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,150 @@
+﻿@model Keyholder.Models.BrowseLevelsViewModel
+@{
+    ViewBag.Title = "Przeglądaj";
+}
+
+@functions {
+    System.Web.IHtmlString DropdownListHelper(string sortProperty, string sortOrder)
+    {
+        string urlString = Url.RouteUrl("BrowseLevels", new
+        {
+            sortProperty = sortProperty,
+            sortOrder = sortOrder,
+            pageSize = Model.PageViewer.PageSize
+        });
+        string nameString = Keyholder.Helpers.GetSortingOptionName(sortProperty, sortOrder);
+        return Html.Raw(String.Format(@"<a class=""dropdown-item"" href={0}>{1}</a>", urlString, nameString));
+    }
+
+    System.Web.IHtmlString DropdownListHelper(int pageSize)
+    {
+        string urlString = Url.RouteUrl("BrowseLevels", new
+        {
+            sortProperty = Model.CurrentSortProperty,
+            sortOrder = Model.CurrentSortOrder,
+            pageSize = pageSize
+        });
+        string nameString = pageSize.ToString();
+        return Html.Raw(String.Format(@"<a class=""dropdown-item"" href={0}>{1}</a>", urlString, nameString));
+    }
+
+    string PageNavigatorHelper(int page)
+    {
+        string urlString = Url.RouteUrl("BrowseLevels", new
+        {
+            sortProperty = Model.CurrentSortProperty,
+            sortOrder = Model.CurrentSortOrder,
+            pageSize = Model.PageViewer.PageSize,
+            page = page
+        });
+        return urlString;
+    }
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<div class="btn-group" role="group">
+    <div class="btn-group" role="group">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="sorting_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @Model.GetCurrentSortingOptionName()
+        </button>
+        <div class="dropdown-menu" aria-labelledby="sorting_dropdown">
+            @DropdownListHelper("Name", "Asc")
+            @DropdownListHelper("Name", "Desc")
+            @DropdownListHelper("Author", "Asc")
+            @DropdownListHelper("Author", "Desc")
+            
+            @DropdownListHelper("Date", "Desc")
+            @DropdownListHelper("Date", "Asc")
+            @DropdownListHelper("ModDate", "Desc")
+            @DropdownListHelper("ModDate", "Asc")
+        </div>
+    </div>
+    <div class="btn-group" role="group">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="page_size_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Wyniki: @Model.PageViewer.PageSize
+        </button>
+        <div class="dropdown-menu" aria-labelledby="page_size_dropdown">
+            @DropdownListHelper(5)
+            @DropdownListHelper(10)
+            @DropdownListHelper(20)
+            @DropdownListHelper(50)
+            @DropdownListHelper(100)
+            @DropdownListHelper(200)
+        </div>
+    </div>
+</div>
+<hr />
+<table class="table table-striped table-hover table-bordered table-dark text-center">
+    <thead>
+        <tr>
+            <th scope="col" class="align-middle" style="width: 10%"></th>
+            <th scope="col" class="align-middle" style="width: 45%">Nazwa</th>
+            <th scope="col" class="align-middle">Autor(ka)</th>
+            <th scope="col" class="align-middle" style="width: 10%">Data dodania</th>
+            <th scope="col" class="align-middle" style="width: 10%">Data modyfikacji</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var levelDescription in Model.Levels)
+        {
+        <tr>
+            <td class="align-middle">
+                <a href="@Url.RouteUrl("Play", new { mapID = levelDescription.LevelID })" class="btn btn-primary" role="button">
+                    Zagraj
+                </a>
+            </td>
+            <td class="align-middle">@levelDescription.Name</td>
+            <td class="align-middle">@Html.RouteLink(levelDescription.AuthorName, "ShowUser", new { name = levelDescription.AuthorName })</td>
+            <td class="align-middle">@levelDescription.Created.ToLocalTime().ToShortDateString()</td>
+            <td class="align-middle">@levelDescription.LastUpdated.ToLocalTime().ToShortDateString()</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.PageViewer.LastPageOnList > 1)
+{
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+
+        @if (Model.PageViewer.CurrentPage > 1)
+        {
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <a href="@PageNavigatorHelper(1)" class="btn btn-primary" role="button">
+                    Pierwsza
+                </a>
+                <a href="@PageNavigatorHelper(Model.PageViewer.CurrentPage - 1)" class="btn btn-primary" role="button">
+                    Poprzednia
+                </a>
+            </div>
+        }
+
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
+            @for (int page = Model.PageViewer.FirstPageOnList; page <= Model.PageViewer.LastPageOnList; page++)
+            {
+                if (page == Model.PageViewer.CurrentPage)
+                {
+                    <a href="@PageNavigatorHelper(@page)" class="btn btn-primary" role="button">@page</a>
+                }
+                else
+                {
+                    <a href="@PageNavigatorHelper(@page)" class="btn btn-secondary" role="button">@page</a>
+                }
+            }
+        </div>
+
+        @if (Model.PageViewer.CurrentPage < Model.PageViewer.TotalPages)
+        {
+            <div class="btn-group" role="group" aria-label="Third group">
+                <a href="@(PageNavigatorHelper(Model.PageViewer.CurrentPage + 1))" class="btn btn-primary" role="button">
+                    Następna
+                </a>
+                <a href="@PageNavigatorHelper(Model.PageViewer.TotalPages)" class="btn btn-primary" role="button">
+                    Ostatnia
+                </a>
+            </div>
+        }
+
+    </div>
+}

@@ -1,0 +1,97 @@
+﻿@model Keyholder.Models.EditLevelViewModel
+@{
+    ViewBag.Title = "Edytor";
+}
+
+<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div id="saveMessage" class="modal-body text-center">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newMapModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Niezapisane zmiany zostaną porzucone.</p>
+            </div>
+            <div class="modal-footer">
+                <a href="@Url.RouteUrl("New")" role="button" class="btn btn-secondary ">Nowa mapa</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>Edytor</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col md-6">
+            <canvas id="gameCanvas">
+                Gra wymaga przeglądarki z obsługą Canvas
+            </canvas>
+        </div>
+        <div class="col md-6">
+            <div class="row">
+                <button id="saveButton" button="button" class="btn btn-lg btn-primary ">Zapisz zmiany</button> 
+                <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#newMapModal">Nowa mapa</button>
+            </div>
+            <div class="row" style="margin-top: 10px">
+                <fieldset>
+                    <div class="form-group">
+                        <textarea class="form-control" id="mapNameTextArea" rows="1" style="height: 50px"></textarea>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <table style="width: 128px; height: 128px; border: 1px solid black">
+                    <tr>
+                        <th class="colorPicker" id="blue" style="background-color: #5B6EE1"></th>
+                        <th class="colorPicker" id="darkGreen" style="background-color: #37946E"></th>
+                        <th class="colorPicker" id="green" style="background-color: #6ABE30"></th>
+                        <th class="colorPicker" id="lightGreen" style="background-color:#99E550"></th>
+                    </tr>
+                    <tr>
+                        <th class="colorPicker" id="mudGreen" style="background-color:#87974A"></th>
+                        <th class="colorPicker" id="orange" style="background-color:#DF7126"></th>
+                        <th class="colorPicker" id="darkOrange" style="background-color:#8F563B"></th>
+                        <th class="colorPicker" id="rust" style="background-color:#AC3232"></th>
+                    </tr>
+                    <tr>
+                        <th class="colorPicker" id="red" style="background-color:#45283C"></th>
+                        <th class="colorPicker" id="lightRed" style="background-color:#663931"></th>
+                        <th class="colorPicker" id="pink" style="background-color:#3F3F74"></th>
+                        <th class="colorPicker" id="purple" style="background-color:#76428A"></th>
+                    </tr>
+                    <tr>
+                        <th class="colorPicker" id="darkBlue" style="background-color:#306082"></th>
+                        <th class="colorPicker" id="sand" style="background-color:#EEC39A"></th>
+                        <th class="colorPicker" id="grey" style="background-color:#847E87"></th>
+                        <th class="colorPicker" id="darkGrey" style="background-color:#696A6A"></th>
+                    </tr>
+                </table>
+            </div>
+            <div class="row" style="margin-top: 10px">
+                <canvas id="editorCanvas"></canvas>
+            </div>
+            <div class="row" style="margin-top: 10px">
+                <button id="setStartPositionButton" button="button" class="btn btn-secondary">Ustaw pozycję startową</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let mapName = "@Model.Name";
+        let mapJsonObject = @Html.Raw(Model.MapString == null ? "null" : Model.MapString);
+        let mapID = @Model.ID;
+        let editorMode = true;
+    </script>
+    <script src="../../GameScripts/Keyholder.js"></script>
+}

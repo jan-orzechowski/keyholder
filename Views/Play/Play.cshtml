@@ -1,0 +1,44 @@
+﻿@model Keyholder.Models.PlayLevelViewModel
+@{
+    ViewBag.Title = @Model.Name;
+}
+
+<div class="modal fade" id="victoryModal" tabindex="-1" role="dialog" aria-labelledby="victoryModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered  modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <button id="victoryButton" type="button" class="btn btn-success btn-lg" data-dismiss="modal"
+                        onclick="location.href = '@Url.RouteUrl("BrowseLevelsDefault")';">
+                    Zwycięstwo!
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>@Model.Name</h2>
+
+<canvas id="gameCanvas">
+    Gra wymaga przeglądarki z obsługą Canvas
+</canvas>
+
+<hr />
+
+<button type="button" class="btn btn-primary btn-sm"
+        onclick="location.reload();">
+    Restart
+</button>
+<button type="button" class="btn btn-primary btn-sm"
+        onclick="location.href = '@Url.RouteUrl("BrowseLevelsDefault")';">
+    Inna mapa
+</button>
+
+@section Scripts {
+    <script>
+        let mapName = "@Model.Name";
+        let mapJsonObject = @Html.Raw(Model.MapString);
+        let mapID = @Model.ID;
+        let editorMode = false;
+    </script>
+    <script src="../../GameScripts/Keyholder.js"></script>
+}
