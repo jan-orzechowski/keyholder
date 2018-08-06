@@ -16,7 +16,7 @@ namespace Keyholder.Models
     {
         public ApplicationDbContext() : base("KeyholderConnectionString", throwIfV1Schema: false)
         {
-            Database.SetInitializer(new MySqlInitializer());
+            Database.SetInitializer<ApplicationDbContext>(new CreateDatabaseIfNotExists<ApplicationDbContext>());
         }
 
         public static ApplicationDbContext Create()
