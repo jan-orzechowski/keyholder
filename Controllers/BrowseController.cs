@@ -64,7 +64,7 @@ namespace Keyholder.Controllers
         [Route("Levels", Name = "BrowseLevelsDefault")]
         [Route("Levels/{sortProperty?}/{sortOrder?}/{pageSize?}/{page?}", Name = "BrowseLevels")]
         public ActionResult Levels(string sortProperty = "Name", string sortOrder = "Asc",
-                                         int pageSize = 10, int page = 1)
+                                   int pageSize = 5, int page = 1)
         {
             if (pageSize < 5) pageSize = 5;
             if (pageSize > 100) pageSize = 100;

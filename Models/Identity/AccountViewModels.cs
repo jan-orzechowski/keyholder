@@ -6,6 +6,10 @@ namespace Keyholder.Models
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
+        [Display(Name = "Nazwa")]
+        public string UserName { get; set; }
+
+        [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
     }
@@ -49,9 +53,8 @@ namespace Keyholder.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "Nazwa")]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -66,8 +69,8 @@ namespace Keyholder.Models
     {
         [Required]
         [Display(Name = "Nazwa użytkownika")]
-        [StringLength(50, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 5)]
-        public string Name { get; set; }
+        [StringLength(50, ErrorMessage = "Nazwa może mieć od 6 do 50 znaków długości.", MinimumLength = 6)]
+        public string UserName { get; set; }
 
         [Required]
         [EmailAddress]
@@ -75,7 +78,7 @@ namespace Keyholder.Models
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(50, ErrorMessage = "Nazwa może mieć od 6 do 50 znaków długości.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Hasło")]
         public string Password { get; set; }
