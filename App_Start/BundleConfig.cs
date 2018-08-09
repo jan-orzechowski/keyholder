@@ -27,7 +27,6 @@ namespace Keyholder
                         "~/Scripts/umd/popper.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                        "~/Content/slate-bootstrap.css",
                         "~/Content/site.css"));
         }
     }
