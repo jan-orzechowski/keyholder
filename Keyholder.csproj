@@ -241,9 +241,14 @@
     <Compile Include="Migrations\201808051449338_InitialMigration.Designer.cs">
       <DependentUpon>201808051449338_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808100935097_AddRatings.cs" />
+    <Compile Include="Migrations\201808100935097_AddRatings.Designer.cs">
+      <DependentUpon>201808100935097_AddRatings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\CustomSqlGenerator.cs" />
     <Compile Include="Models\Helpers.cs" />
+    <Compile Include="Models\Rating.cs" />
     <Compile Include="Models\ViewModels\BrowseViewModels.cs" />
     <Compile Include="Models\ViewModels\LevelInfoViewModel.cs" />
     <Compile Include="Models\LevelJsonSchema.cs" />
@@ -387,6 +392,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201808051449338_InitialMigration.resx">
       <DependentUpon>201808051449338_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808100935097_AddRatings.resx">
+      <DependentUpon>201808100935097_AddRatings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

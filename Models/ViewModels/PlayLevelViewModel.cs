@@ -7,9 +7,9 @@ namespace Keyholder.Models
 {
     public class PlayLevelViewModel
     {
-        public int ID;
-        public string Name;
+        public int MapID;
+        public string AuthorName;
+        public string MapName;
         public string MapString;
-        public bool AuthorizedUser;
     }
 }

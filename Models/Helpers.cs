@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Keyholder.Models;
 
@@ -15,11 +16,7 @@ namespace Keyholder
     {
         public static ApplicationUser GetUser(ApplicationDbContext context, string id)
         {
-            UserManager<ApplicationUser> manager =
-                        new UserManager<ApplicationUser>(
-                            new UserStore<ApplicationUser>(context));
-
-            return manager.FindById(id);
+            return context.Users.FirstOrDefault(x => x.Id == id);
         }
 
         public static string GetSortingOptionName(string sortProperty, string sortOrder)
@@ -36,6 +33,8 @@ namespace Keyholder
                         return "Data dodania - od najnowszych";
                     case "ModDate":
                         return "Data modyfikacji - od najnowszych";
+                    case "AverageRating":
+                        return "Ocena - od najwyższej";
                     default:
                         return "Błąd";
                 }
@@ -52,6 +51,8 @@ namespace Keyholder
                         return "Data dodania - od najstarszych";
                     case "ModDate":
                         return "Data modyfikacji - od najstarszych";
+                    case "AverageRating":
+                        return "Ocena - od najniższej";
                     default:
                         return "Błąd";
                 }
@@ -62,7 +63,7 @@ namespace Keyholder
             }
         }
 
-        public static string GetOrderByString(string sortProperty, string sortOrder)
+        public static string GetLevelOrderBy(string sortProperty, string sortOrder)
         {
             if (sortOrder != "Asc" && sortOrder != "Desc")
             {
@@ -83,12 +84,27 @@ namespace Keyholder
                 case "ModDate":
                     sortProperty = "LastUpdated";
                     break;
+                case "AverageRating":
+                    sortProperty = "AverageRating";
+                    break;
                 default:
                     sortProperty = "Name";
                     break;
             }
 
             return (sortProperty + " " + sortOrder);
+        }
+
+        public static string PrintAverageRating(float? averageRating)
+        {
+            if (averageRating.HasValue == false)
+            {
+                return "Brak oceny";
+            }
+
+            string result = Math.Round(averageRating.Value, 2).ToString() + " / 5";
+
+            return result;
         }
 
         public static string TruncateString(string stringToTruncate, int maxLength)

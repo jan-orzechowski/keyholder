@@ -54,7 +54,8 @@
             @DropdownListHelper("Name", "Desc")
             @DropdownListHelper("Author", "Asc")
             @DropdownListHelper("Author", "Desc")
-            
+            @DropdownListHelper("AverageRating", "Desc")
+            @DropdownListHelper("AverageRating", "Asc")
             @DropdownListHelper("Date", "Desc")
             @DropdownListHelper("Date", "Asc")
             @DropdownListHelper("ModDate", "Desc")
@@ -80,6 +81,7 @@
         <tr>
             <th scope="col" class="align-middle" style="width: 10%"></th>
             <th scope="col" class="align-middle" style="width: 45%">Nazwa</th>
+            <th scope="col" class="align-middle" style="width: 10%">Ocena</th>
             <th scope="col" class="align-middle">Autor(ka)</th>
             <th scope="col" class="align-middle" style="width: 10%">Data dodania</th>
             <th scope="col" class="align-middle" style="width: 10%">Data modyfikacji</th>
@@ -95,6 +97,7 @@
                 </a>
             </td>
             <td class="align-middle">@levelDescription.Name</td>
+            <td class="align-middle">@Helpers.PrintAverageRating(levelDescription.AverageRating)</td>
             <td class="align-middle">@Html.RouteLink(levelDescription.AuthorName, "ShowUser", new { name = levelDescription.AuthorName })</td>
             <td class="align-middle">@levelDescription.Created.ToLocalTime().ToShortDateString()</td>
             <td class="align-middle">@levelDescription.LastUpdated.ToLocalTime().ToShortDateString()</td>

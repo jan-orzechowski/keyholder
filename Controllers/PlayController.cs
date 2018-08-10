@@ -25,23 +25,80 @@ namespace Keyholder.Controllers
                          where level.ID == mapID
                          select new PlayLevelViewModel()
                          {
-                             ID = level.ID,
-                             Name = level.Name,
+                             MapID = level.ID,
+                             MapName = level.Name,
                              MapString = level.LevelData,
+                             AuthorName = level.Author.UserName,
                          })
                          .FirstOrDefault();
 
                 if (model == null)
                 {
-                    // błąd
-                    return null;
+                    return RedirectToRoute("BrowseLevelsDefault");
                 }
-
-                // spr. czy użytkownik jest zalogowany
-                model.AuthorizedUser = true;
 
                 return View("Play", model);
             }
         }        
+
+        [HttpPost]        
+        [Route("Play/Rate")]
+        public ActionResult Rate(int mapID, int? grade)
+        {
+            if (User.Identity.IsAuthenticated == false)
+            {
+                return RedirectToRoute("BrowseLevelsDefault");
+            }
+
+            using (var context = new ApplicationDbContext())
+            {
+                string currentUserID = User.Identity.GetUserId();
+
+                Level currentLevel = (from l in context.Levels
+                                      where l.ID == mapID
+                                      select l)
+                                      .Include(l => l.Author)
+                                      .FirstOrDefault();
+
+                if (currentLevel == null
+                    || currentLevel.Author.Id == currentUserID)
+                {
+                    return RedirectToRoute("BrowseLevelsDefault");
+                }              
+
+                Rating rating = (from r in context.Ratings
+                                 where r.LevelID == mapID
+                                    && r.PlayerID == currentUserID
+                                 select r)
+                                .FirstOrDefault();
+
+                if (rating == null)
+                {
+                    rating = new Rating()
+                    {
+                        LevelID = mapID,
+                        PlayerID = currentUserID
+                    };
+
+                    context.Ratings.Add(rating);
+                }
+
+                if (grade != null)
+                {
+                    if (grade.Value < 1) grade = 1;
+                    if (grade.Value > 5) grade = 5;
+
+                    rating.Value = grade;
+                }
+                
+                context.SaveChanges();
+
+                currentLevel.RecalculateAverageRating(context);
+
+                context.SaveChanges();
+            }
+
+            return RedirectToRoute("BrowseLevelsDefault");
+        }
     }
 }

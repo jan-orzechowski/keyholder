@@ -45,7 +45,8 @@ namespace Keyholder.Controllers
                          LevelID = level.ID,
                          Name = level.Name,
                          Created = level.Created,
-                         LastUpdated = level.LastUpdated
+                         LastUpdated = level.LastUpdated,
+                         AverageRating = level.AverageRating
                      })
                     .ToList();
 
@@ -80,7 +81,7 @@ namespace Keyholder.Controllers
 
                 var levelDescriptions =
                     (from level in context.Levels
-                    .OrderBy(Helpers.GetOrderByString(sortProperty, sortOrder))
+                    .OrderBy(Helpers.GetLevelOrderBy(sortProperty, sortOrder))
                     .Skip(startingIndex)
                     .Take(lastIndex - startingIndex)
                     .AsNoTracking()
@@ -90,7 +91,8 @@ namespace Keyholder.Controllers
                          Name = level.Name,
                          AuthorName = level.Author.UserName,
                          Created = level.Created,
-                         LastUpdated = level.LastUpdated
+                         LastUpdated = level.LastUpdated,
+                         AverageRating = level.AverageRating
                      })
                     .ToList();
 

@@ -1,22 +1,61 @@
 ﻿@model Keyholder.Models.PlayLevelViewModel
 @{
-    ViewBag.Title = @Model.Name;
+    ViewBag.Title = @Model.MapName;
 }
 
 <div class="modal fade" id="victoryModal" tabindex="-1" role="dialog" aria-labelledby="victoryModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered  modal-sm" role="document">
         <div class="modal-content">
-            <div class="modal-body text-center">
-                <button id="victoryButton" type="button" class="btn btn-success btn-lg" data-dismiss="modal"
-                        onclick="location.href = '@Url.RouteUrl("BrowseLevelsDefault")';">
-                    Zwycięstwo!
+
+            <div class="modal-header">
+                <h5 class="modal-title">Zwycięstwo!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
+            @if (User.Identity.IsAuthenticated && User.Identity.Name != Model.AuthorName)
+            {
+                <form action="Rate" method="post">
+                    <div class="modal-body text-center">
+                        <input id="mapIDInput" name="mapID" type="hidden" value="@Model.MapID">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="grade" id="radio1" value="1">
+                            <label class="form-check-label" for="radio1">1 </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="grade" id="radio2" value="2">
+                            <label class="form-check-label" for="radio2">2 </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="grade" id="radio3" value="3">
+                            <label class="form-check-label" for="radio3">3 </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="grade" id="radio4" value="4">
+                            <label class="form-check-label" for="radio4">4 </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="grade" id="radio5" value="5" checked>
+                            <label class="form-check-label" for="radio5">5 </label>
+                        </div>
+                        <div class="modal-footer">
+                            <input id="victoryButton" type="submit" value="Wystaw ocenę" class="btn btn-success" onclick="location.href = '@Url.RouteUrl("BrowseLevelsDefault")';" />
+                        </div>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="modal-footer">
+                    <button id="victoryButton" type="button" class="btn btn-success" onclick="location.href = '@Url.RouteUrl("BrowseLevelsDefault")';">Następna mapa</button>
+                </div>
+            }
         </div>
     </div>
 </div>
 
-<h2>@Model.Name</h2>
+<h2>@Model.MapName</h2>
 
 <canvas id="gameCanvas">
     Gra wymaga przeglądarki z obsługą Canvas
@@ -35,9 +74,9 @@
 
 @section Scripts {
     <script>
-        let mapName = "@Model.Name";
+        let mapName = "@Model.MapName";
         let mapJsonObject = @Html.Raw(Model.MapString);
-        let mapID = @Model.ID;
+        let mapID = @Model.MapID;
         let editorMode = false;
     </script>
     <script src="../../GameScripts/Keyholder.js"></script>

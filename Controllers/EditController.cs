@@ -61,20 +61,25 @@ namespace Keyholder.Controllers
 
             using (ApplicationDbContext context = new ApplicationDbContext())
             {
+                ApplicationUser currentUser = Helpers.GetUser(context, User.Identity.GetUserId());
+                if (currentUser == null)
+                {
+                    return Json(new { mapID = 0 });
+                }
+
                 if (currentMapID == 0)
                 {
                     // Nowa mapa
-
+                    
                     Level newLevel = new Level
                     {
                         Name = name,
                         Created = DateTime.UtcNow,
                         LastUpdated = DateTime.UtcNow,
-                        LevelData = mapString
+                        LevelData = mapString,
+                        Author = currentUser
                     };
-
-                    newLevel.Author = Helpers.GetUser(context, User.Identity.GetUserId());
-
+                    
                     context.Levels.Add(newLevel);
 
                     context.SaveChanges();
@@ -90,13 +95,8 @@ namespace Keyholder.Controllers
                         .Include(x => x.Author)
                         .First();
 
-                    if (levelToModify == null)
-                    {
-                        return Json(new { mapID = 0 });
-                    }
-
-                    string currentUserID = User.Identity.GetUserId();
-                    if (levelToModify.Author.Id != currentUserID)
+                    if (levelToModify == null
+                        || levelToModify.Author != currentUser)
                     {
                         return Json(new { mapID = 0 });
                     }

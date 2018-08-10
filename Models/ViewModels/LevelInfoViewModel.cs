@@ -12,6 +12,6 @@ namespace Keyholder.Models
         public string AuthorName;
         public DateTime Created;
         public DateTime LastUpdated;
-        public int? AverageRating;
+        public float? AverageRating;        
     }
 }

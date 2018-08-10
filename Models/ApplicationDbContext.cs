@@ -39,5 +39,6 @@ namespace Keyholder.Models
         }
 
         public virtual DbSet<Level> Levels { get; set; }
+        public virtual DbSet<Rating> Ratings { get; set; }
     }   
 }

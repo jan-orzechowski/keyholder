@@ -27,8 +27,39 @@ namespace Keyholder.Models
         public DateTime Created { get; set; }
 
         [Required]
-        public DateTime LastUpdated { get; set; }        
-        
+        public DateTime LastUpdated { get; set; }
+
+        public float? AverageRating { get; set; }
+
+        public virtual ICollection<Rating> Ratings { get; set; }
+
+        public void RecalculateAverageRating(ApplicationDbContext context)
+        {
+            List<Rating> ratings = (from r in context.Ratings
+                                    where r.LevelID == ID
+                                    select r)
+                                    .ToList();
+            int sum = 0;
+            int count = 0;
+            foreach (Rating r in ratings)
+            {
+                if (r.Value != null)
+                {
+                    sum += r.Value.Value;
+                    count++;
+                }
+            }
+
+            if (sum != 0 && count != 0)
+            {
+                AverageRating = ((float)sum / count);
+            }
+            else
+            {
+                AverageRating = null;
+            }
+        }
+
         public static bool ValidateData(string levelData)
         {
             if (levelData == null) return false;
@@ -36,6 +67,6 @@ namespace Keyholder.Models
             JObject level = JObject.Parse(levelData);
             bool result = level.IsValid(schema);
             return result;
-        }
+        }        
     }
 }

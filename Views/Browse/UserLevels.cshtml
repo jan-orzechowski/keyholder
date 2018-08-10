@@ -1,48 +1,69 @@
 ﻿@model Keyholder.Models.UserViewModel
 @{
     ViewBag.Title = Model.Name;
+
+    bool usersOwnPage = (User.Identity.Name == Model.Name);
 }
 
 <h2>@Model.Name</h2>
 <hr />
-<a href="@Url.RouteUrl("New")" class="btn btn-primary" role="button">
-    Nowa mapa
-</a>
-<hr />
+@if (usersOwnPage)
+{
+    <a href="@Url.RouteUrl("New")" class="btn btn-primary" role="button">
+        Nowa mapa
+    </a>
+    <hr />
+}
+
 @if (Model.Levels.Count == 0)
 {
-    <p>Nie masz jeszcze żadnych własnych map.</p>
+    if (usersOwnPage)
+    {
+        <p>Nie masz jeszcze żadnych własnych map.</p>
+    }
+    else
+    {
+        <p>Ten użytkownik nie ma jeszcze żadnych własnych map.</p>
+    }
 }
 else
 {
-    <table class="table table-striped table-hover table-bordered table-dark text-center" style="width: 80%;" >
+    <table class="table table-striped table-hover table-bordered table-dark text-center" style="width: 80%;">
         <thead>
             <tr>
-                <th scope="col" class="align-middle" style="width: 10%"></th>
+                @if (usersOwnPage)
+                {
+                    <th scope="col" class="align-middle" style="width: 10%"></th>
+                }
                 <th scope="col" class="align-middle" style="width: 10%"></th>
                 <th scope="col" class="align-middle">Nazwa</th>
                 <th scope="col" class="align-middle" style="width: 15%">Data utworzenia</th>
                 <th scope="col" class="align-middle" style="width: 15%">Data modyfikacji</th>
+                <th scope="col" class="align-middle" style="width: 10%">Ocena</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var levelDescription in Model.Levels)
             {
-            <tr>
-                <td class="align-middle">
-                    <a href="@Url.RouteUrl("Edit", new { mapID = levelDescription.LevelID })" class="btn btn-primary" role="button">
-                        Edytuj
-                    </a>
-                </td>
-                <td class="align-middle">
-                    <a href="@Url.RouteUrl("Play", new { mapID = levelDescription.LevelID })" class="btn btn-primary" role="button">
-                        Zagraj
-                    </a>
-                </td>
-                <td class="align-middle">@levelDescription.Name</td>
-                <td class="align-middle">@levelDescription.Created.ToLocalTime()</td>
-                <td class="align-middle">@levelDescription.LastUpdated.ToLocalTime()</td>
-            </tr>
+                <tr>
+                    @if (usersOwnPage)
+                    {
+                        <td class="align-middle">
+                            <a href="@Url.RouteUrl("Edit", new { mapID = levelDescription.LevelID })" class="btn btn-primary" role="button">
+                                Edytuj
+                            </a>
+                        </td>
+                    }
+                    <td class="align-middle">
+                        <a href="@Url.RouteUrl("Play", new { mapID = levelDescription.LevelID })" class="btn btn-primary" role="button">
+                            Zagraj
+                        </a>
+                    </td>
+                    <td class="align-middle">@levelDescription.Name</td>
+                    <td class="align-middle">@levelDescription.Created.ToLocalTime()</td>
+                    <td class="align-middle">@levelDescription.LastUpdated.ToLocalTime()</td>
+                    <td class="align-middle">@Helpers.PrintAverageRating(levelDescription.AverageRating)</td>
+                </tr>
             }
         </tbody>
     </table>

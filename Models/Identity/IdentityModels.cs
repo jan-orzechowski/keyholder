@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
 using System.Security.Claims;
@@ -18,5 +19,7 @@ namespace Keyholder.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public virtual ICollection<Rating> Ratings { get; set; }
     }
 }
